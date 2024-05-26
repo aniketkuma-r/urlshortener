@@ -1,7 +1,7 @@
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-require('dotenv').config();
 
 const { connectToMongo } = require("./connection");
 const urlRoute = require("./routes/url.route");
@@ -15,7 +15,7 @@ const {
 // connections
 const app = express();
 const PORT = process.env.PORT;
-connectToMongo("mongodb://localhost:27017/urlshortner").then(() =>
+connectToMongo(process.env.MONGO_URL).then(() =>
   console.log("mongoDB connected !!")
 );
 
@@ -31,7 +31,7 @@ app.use(cookieParser());
 app.use(checkForAuthentication);
 
 // routes
-app.use("/url", restrictTo(["NORMAL","ADMIN"]), urlRoute);
+app.use("/url", restrictTo(["USER", "ADMIN"]), urlRoute);
 app.use("/user", userRoute);
 app.use("/", homeRoute);
 
